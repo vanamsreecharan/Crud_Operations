@@ -20,10 +20,9 @@ module.exports = sequelize;*/
 // db.js
 const { Sequelize } = require('sequelize');
 
-// Use SQLite
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: './database.sqlite' 
+  storage: './database.sqlite'
 });
 
 module.exports = sequelize;

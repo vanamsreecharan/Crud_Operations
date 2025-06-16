@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 });
 
 sequelize
-  .sync({ alter: true })  // Use alter: true to keep tables up-to-date
+  .sync({ alter: true })  
   .then(() => {
     console.log("✅ SQLite database synchronized");
     const PORT = process.env.PORT || 3000;
