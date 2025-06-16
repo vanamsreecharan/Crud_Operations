@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+/*const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -14,6 +14,17 @@ const sequelize = new Sequelize(
       }
     }
   }
-);
+); 
+
+module.exports = sequelize;*/
+// db.js
+const { Sequelize } = require('sequelize');
+
+// Use SQLite
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './database.sqlite' 
+});
 
 module.exports = sequelize;
+

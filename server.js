@@ -14,15 +14,15 @@ app.get("/", (req, res) => {
 });
 
 sequelize
-  .sync({ alter: true })
+  .sync({ alter: true })  // Use alter: true to keep tables up-to-date
   .then(() => {
-    console.log("database synchronized");
+    console.log("✅ SQLite database synchronized");
     const PORT = process.env.PORT || 3000;
 
     app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`);
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
-    console.log("error synchronized the database", error);
+    console.error("❌ Failed to sync SQLite database:", error);
   });
