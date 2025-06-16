@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+/*const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
 const User = sequelize.define('user', {
@@ -71,3 +71,59 @@ const User = sequelize.define('user', {
 module.exports = User;
 
 
+*/
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+  employeeid: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  firstname: {
+    type: String,
+    required: true
+  },
+  lastname: {
+    type: String,
+    required: true
+  },
+  email_id: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: function (value) {
+        return value.endsWith('@signavoxtechnologies.com');
+      },
+      message: 'Email must end with @signavoxtechnologies.com'
+    }
+  },
+  Role: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        const allowedRoles = ['testing', 'developer', 'hr', 'manager', 'teamlead', 'ceo', 'operations'];
+        return allowedRoles.includes(value.toLowerCase());
+      },
+      message: 'Role must be one of: testing, developer, hr, manager, teamlead, ceo, operations'
+    }
+  },
+  Address: {
+    type: String,
+    required: true
+  },
+  DOB: {
+    type: Date
+  },
+  PhoneNumber: {
+    type: Number,
+    unique: true
+  }
+}, {
+  collection: 'users', // equivalent to tableName
+  timestamps: false
+});
+
+module.exports = mongoose.model('User', userSchema);

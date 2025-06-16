@@ -1,4 +1,4 @@
-require("dotenv").config();
+/*require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -13,16 +13,45 @@ app.get("/", (req, res) => {
   res.send("your get request is working!");
 });
 
-sequelize
-  .sync({ alter: true })  
-  .then(() => {
-    console.log("✅ SQLite database synchronized");
-    const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+*/
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
+const app = express();
+const userRoutes = require("./Routes/routes");
+
+// Middleware
+app.use(cors());
+app.use(express.static("public"));
+app.use(express.json());
+app.use("/", userRoutes);
+
+// Basic health check route
+app.get("/", (req, res) => {
+  res.send("Your GET request is working!");
+});
+
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("MongoDB connected successfully");
+
+    // Start server only after DB connection
+    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`🚀 Server running at http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
-    console.error("❌ Failed to sync SQLite database:", error);
+    console.error("MongoDB connection failed:", error.message);
   });
