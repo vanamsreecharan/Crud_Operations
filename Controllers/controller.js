@@ -32,11 +32,24 @@ exports.createUser = async (req, res) => {
       DOB,
       PhoneNumber
     });
-    const token=jwt.sign({employeeid,email_id,Role},process.JWT_SECRET,{
-      expiresIn:process.env.JWT_EXPIRES_IN,
-    });
+ const token = jwt.sign(
+  {
+    employeeid,
+    firstname,
+    lastname,
+    email_id,
+    password,
+    Role,
+    Address,
+    DOB,
+    PhoneNumber
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: process.env.JWT_EXPIRES_IN }
+);
     res.status(201).json({
       message: 'User created successfully!',
+      token,
       data: newUser
     });
   } catch (error) {
