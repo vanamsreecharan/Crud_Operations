@@ -13,8 +13,8 @@ const router = express.Router();
 const userController = require('../Controllers/controller');
 const { authenticateJWT, authorizeRoles } = require('../Middleware/Middleware');
 
-router.post('/users',authenticateJWT, authorizeRoles('hr', 'ceo', 'teamlead','operations'), userController.createUser);
-router.get('/users',authenticateJWT, authorizeRoles('hr', 'ceo', 'teamlead'), userController.getAllUsers);
+router.post('/users',userController.createUser);
+router.get('/users',userController.getAllUsers);
 router.get('/users/:id', userController.getUserById);
 router.delete('/users/:id', userController.deleteUserById);
 router.put('/users/:id', userController.updateUserById);
