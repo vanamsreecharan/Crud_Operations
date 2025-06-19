@@ -6,7 +6,7 @@ require('dotenv').config();
 // Create User
 exports.createUser = async (req, res) => {
   try {
-    let { employeeid, firstname, lastname, email_id, Role, Address, DOB, PhoneNumber } = req.body;
+    let { employeeid, firstname, lastname, email_id,password, Role, Address, DOB, PhoneNumber } = req.body;
 
     // Auto-generate employeeid if not provided
     if (!employeeid) {
