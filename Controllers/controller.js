@@ -1,5 +1,7 @@
 
 const User = require('../Models/User');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 // Create User
 exports.createUser = async (req, res) => {
@@ -29,7 +31,9 @@ exports.createUser = async (req, res) => {
       DOB,
       PhoneNumber
     });
-
+    const token=jwt.sign({employeeid,email_id,Role},process.JWT_SECRET,{
+      expiresIn:process.env.JWT_EXPIRES_IN,
+    });
     res.status(201).json({
       message: 'User created successfully!',
       data: newUser
@@ -99,15 +103,30 @@ exports.deleteUserById = async (req, res) => {
 // Update User by ID
 exports.updateUserById = async (req, res) => {
   try {
-    const result = await User.updateOne({ employeeid: req.params.id }, req.body);
+    const allowedRoles = ['testing', 'developer', 'hr', 'manager', 'teamlead', 'ceo', 'operations'];
+    const userRole = req.body.Role;
 
-    if (result.modifiedCount === 0) {
-      return res.status(404).json({
-        message: 'User not found or nothing to update',
+    if (!userRole || !allowedRoles.includes(userRole.toLowerCase())) {
+      return res.status(403).json({
+        message: 'Access denied. Allowed roles are: testing, developer, hr, manager, teamlead, ceo, operations'
       });
     }
 
-    const updatedUser = await User.findOne({ employeeid: req.params.id });
+    const updatedUser = await User.findOneAndUpdate(
+      { employeeid: req.params.id },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+        context: 'query'
+      }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: 'User not found or nothing to update'
+      });
+    }
 
     res.status(200).json({
       message: 'User data updated successfully',
@@ -116,10 +135,11 @@ exports.updateUserById = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: 'Failed to update user',
-      error: error.message,
+      error: error.message
     });
   }
 };
+
 
 // Get Company Summary
 exports.getCompanySummary = async (req, res) => {

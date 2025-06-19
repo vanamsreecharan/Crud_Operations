@@ -73,7 +73,7 @@ module.exports = User;
 
 */
 const mongoose = require('mongoose');
-
+const bcrypt=require('bcrypt');
 const userSchema = new mongoose.Schema({
   employeeid: {
     type: String,
@@ -99,6 +99,12 @@ const userSchema = new mongoose.Schema({
       message: 'Email must end with @signavoxtechnologies.com'
     }
   },
+  password: 
+  { 
+    type: String,
+     required: true,
+
+     },
   Role: {
     type: String,
     required: true,
@@ -125,5 +131,15 @@ const userSchema = new mongoose.Schema({
   collection: 'users', // equivalent to tableName
   timestamps: false
 });
+
+//Hashing for password security
+userSchema.pre('save',async function(next){
+if(!this.isModified('password')) return next();
+this.password=await bcrypt.hash(this.password,10);
+next();
+
+});
+
+
 
 module.exports = mongoose.model('User', userSchema);
